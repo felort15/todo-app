@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, KeyboardEvent } from 'react'
 import { PlusCircleIcon, CheckCircleIcon } from '@heroicons/react/24/solid'
 
 interface Todo {
@@ -12,6 +12,25 @@ interface Todo {
 export default function Home() {
   const [todos, setTodos] = useState<Todo[]>([])
   const [input, setInput] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    try {
+      const storedTodos = localStorage.getItem('todos')
+      if (storedTodos) {
+        setTodos(JSON.parse(storedTodos))
+      }
+    } catch (error) {
+      console.warn('Error reading from localStorage:', error)
+    }
+    setIsLoading(false)
+  }, [])
+
+  useEffect(() => {
+    if (!isLoading) {
+      localStorage.setItem('todos', JSON.stringify(todos))
+    }
+  }, [todos, isLoading])
 
   const addTodo = () => {
     if (input.trim()) {
@@ -21,6 +40,13 @@ export default function Home() {
         completed: false
       }])
       setInput('')
+    }
+  }
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      addTodo()
     }
   }
 
@@ -34,6 +60,19 @@ export default function Home() {
     setTodos(todos.filter(todo => todo.id !== id))
   }
 
+  if (isLoading) {
+    return (
+      <main className="min-h-screen p-8">
+        <div className="max-w-md mx-auto">
+          <h1 className="text-4xl font-bold text-center mb-8">Todo App</h1>
+          <div className="flex justify-center">
+            <div className="animate-pulse">Loading...</div>
+          </div>
+        </div>
+      </main>
+    )
+  }
+
   return (
     <main className="min-h-screen p-8">
       <div className="max-w-md mx-auto">
@@ -44,7 +83,7 @@ export default function Home() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && addTodo()}
+            onKeyDown={handleKeyDown}
             placeholder="Add a new todo..."
             className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
