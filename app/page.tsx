@@ -1,17 +1,37 @@
 'use client'
 
 import { useState } from 'react'
-import { PlusCircleIcon } from '@heroicons/react/24/solid'
+import { PlusCircleIcon, CheckCircleIcon } from '@heroicons/react/24/solid'
+
+interface Todo {
+  id: number;
+  text: string;
+  completed: boolean;
+}
 
 export default function Home() {
-  const [todos, setTodos] = useState<string[]>([])
+  const [todos, setTodos] = useState<Todo[]>([])
   const [input, setInput] = useState('')
 
   const addTodo = () => {
     if (input.trim()) {
-      setTodos([...todos, input.trim()])
+      setTodos([...todos, {
+        id: Date.now(),
+        text: input.trim(),
+        completed: false
+      }])
       setInput('')
     }
+  }
+
+  const toggleTodo = (id: number) => {
+    setTodos(todos.map(todo => 
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ))
+  }
+
+  const deleteTodo = (id: number) => {
+    setTodos(todos.filter(todo => todo.id !== id))
   }
 
   return (
@@ -37,15 +57,27 @@ export default function Home() {
         </div>
 
         <ul className="space-y-2">
-          {todos.map((todo, index) => (
+          {todos.map((todo) => (
             <li
-              key={index}
-              className="p-4 bg-white rounded-lg shadow flex justify-between items-center"
+              key={todo.id}
+              className="p-4 bg-white rounded-lg shadow flex items-center justify-between gap-3"
             >
-              <span>{todo}</span>
               <button
-                onClick={() => setTodos(todos.filter((_, i) => i !== index))}
-                className="text-red-500 hover:text-red-700"
+                onClick={() => toggleTodo(todo.id)}
+                className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                  todo.completed 
+                    ? 'border-green-500 bg-green-500 text-white' 
+                    : 'border-gray-300 hover:border-green-500'
+                }`}
+              >
+                {todo.completed && <CheckCircleIcon className="w-5 h-5" />}
+              </button>
+              <span className={`flex-grow text-center ${todo.completed ? 'line-through text-gray-500' : ''}`}>
+                {todo.text}
+              </span>
+              <button
+                onClick={() => deleteTodo(todo.id)}
+                className="flex-shrink-0 text-red-500 hover:text-red-700"
               >
                 Delete
               </button>
