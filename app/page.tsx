@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, KeyboardEvent } from 'react'
-import { PlusCircleIcon, CheckCircleIcon, CalendarIcon } from '@heroicons/react/24/solid'
+import { PlusCircleIcon, CheckCircleIcon, CalendarIcon, TrashIcon } from '@heroicons/react/24/solid'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 
@@ -209,9 +209,10 @@ export default function Home() {
               </div>
               <button
                 onClick={() => deleteTodo(todo.id)}
-                className="flex-shrink-0 text-red-500 hover:text-red-700"
+                className="flex-shrink-0 text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors"
+                title="Delete todo"
               >
-                Delete
+                <TrashIcon className="w-5 h-5" />
               </button>
             </li>
           ))}
