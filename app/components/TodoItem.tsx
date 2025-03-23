@@ -37,6 +37,7 @@ export default function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
             ? 'border-green-500 bg-green-500 text-white' 
             : 'border-gray-300 hover:border-green-500'
         }`}
+        aria-label="Toggle todo"
       >
         {todo.completed && <CheckCircleIcon className="w-5 h-5" />}
       </button>
@@ -54,7 +55,7 @@ export default function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
       <button
         onClick={() => onDelete(todo.id)}
         className="flex-shrink-0 text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors"
-        title="Delete todo"
+        aria-label="Delete todo"
       >
         <TrashIcon className="w-5 h-5" />
       </button>
