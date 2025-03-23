@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import TodoInput from './components/TodoInput'
 import TodoList from './components/TodoList'
 import NotificationBanner from './components/NotificationBanner'
+import { Toaster } from 'react-hot-toast'
 
 interface Todo {
   id: number;
@@ -125,6 +126,7 @@ export default function Home() {
           onToggle={toggleTodo}
           onDelete={deleteTodo}
         />
+        <Toaster />
       </div>
     </main>
   )

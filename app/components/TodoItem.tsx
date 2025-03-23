@@ -1,6 +1,7 @@
 'use client'
 
 import { CheckCircleIcon, CalendarIcon, TrashIcon } from '@heroicons/react/24/solid'
+import toast from 'react-hot-toast'
 
 interface Todo {
   id: number;
@@ -28,10 +29,24 @@ export default function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
     }).format(date)
   }
 
+  const handleToggle = () => {
+    onToggle(todo.id)
+    if (!todo.completed) {
+      toast.success(`Completed: ${todo.text}`, {
+        duration: 2000,
+        position: 'top-right',
+        style: {
+          background: '#10B981',
+          color: '#fff',
+        },
+      })
+    }
+  }
+
   return (
     <li className="p-4 bg-white rounded-lg shadow flex items-center justify-between gap-3">
       <button
-        onClick={() => onToggle(todo.id)}
+        onClick={handleToggle}
         className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center ${
           todo.completed 
             ? 'border-green-500 bg-green-500 text-white' 
