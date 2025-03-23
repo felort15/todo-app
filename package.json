@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "npm run build && gh-pages -d build"
+    "deploy": "next build && next export && gh-pages -d out"
   },
   "keywords": [
     "todo",
